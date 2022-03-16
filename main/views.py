@@ -19,7 +19,7 @@ def get_mentor(request, first_name: str) -> Response:
 def create_mentor(request) -> Response:
     """create a new mentor object"""
     data = request['data']
-    serializer = MentorSerializer(data)
+    serializer = MentorSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
         return Response({"message": "created successfully"}, status=status.HTTP_201_CREATED)
@@ -28,7 +28,7 @@ def create_mentor(request) -> Response:
 @api_view(["GET"])
 def list_mentors(request):
     mentors= Mentor.objects.all()
-    serializer = MentorSerializer(mentors, many=True)
+    serializer = MentorSerializer(data=mentors, many=True)
     if serializer.is_valid():
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
@@ -48,7 +48,7 @@ def get_mentee(request, first_name: str) -> Response:
 def create_mentee(request) -> Response:
     """create a new mentee object"""
     data = request['data']
-    serializer = MenteeSerializer(data)
+    serializer = MenteeSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
         return Response({"message": "created successfully"}, status=status.HTTP_201_CREATED)
@@ -57,8 +57,27 @@ def create_mentee(request) -> Response:
 @api_view(["GET"])
 def list_mentees(request):
     mentors= Mentee.objects.all()
-    serializer = MenteeSerializer(mentors, many=True)
+    serializer = MenteeSerializer(data=mentors, many=True)
     if serializer.is_valid():
         return Response(serializer.data, status=status.HTTP_200_OK)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["PUT"])
+def change_mentor(request):
+    """change the mentor of a mentor based on the value passed in the request body and data"""
+    actor = request["body"]["actor"]
+    if actor == "mentor":
+        mentee_name = request["data"]["mentee_name"]
+        mentor = request["data"]["mentor"]
+        men = Mentor.objects.filter(first_name=mentee_name).update(mentor=mentor)
+        men.save()
+        serializer = MentorSerializer(data=men)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response({"message":"object cannot be updated"}, status=status.HTTP_203_FAILED)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
