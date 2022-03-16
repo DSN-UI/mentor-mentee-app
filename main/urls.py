@@ -7,6 +7,7 @@ from .views import (
     get_mentee,
     create_mentee,
     list_mentees,
+    change_mentor
 )
 
 
@@ -18,5 +19,6 @@ urlpatterns = [
     path('mentee/{pk:str}', get_mentee),
     path('mentee/create', create_mentee),
     path('mentees/', list_mentees),
+    path('mentee/update/', change_mentor),
     path('docs/', schema)
 ]
