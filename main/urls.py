@@ -14,7 +14,7 @@ from .views import (
 schema = get_swagger_view(title="Mentor Mentee API")
 urlpatterns = [
     path('mentor/{pk:str}/', get_mentor),
-    path('mentors/`', list_mentors),
+    path('mentors/', list_mentors),
     path('mentor/create', create_mentor),
     path('mentee/{pk:str}', get_mentee),
     path('mentee/create', create_mentee),
