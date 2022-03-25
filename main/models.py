@@ -17,7 +17,7 @@ class Mentor(models.Model):
     phone_number = models.CharField(max_length=50)
     stack = models.CharField(max_length=150)
     dob = models.DateField(editable=True)
-    image = models.ImageField(upload_to="images/mentors")
+    image = models.ImageField(upload_to="images/mentors", blank=True, null=True)
 
 
 
@@ -30,7 +30,7 @@ class Mentee(models.Model):
     stack = models.CharField(max_length=150)
     dob = models.DateField(editable=True)
     mentor = models.OneToOneField(Mentor, on_delete=models.RESTRICT, related_name="mentor", blank=True)
-    image = models.ImageField(upload_to="images/mentees")
+    image = models.ImageField(upload_to="images/mentees", blank=True, null=True)
 
     def change_mentor(self, new_mentor = None):
         """method for changing the mentor of a mentee"""
